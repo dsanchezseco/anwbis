@@ -380,7 +380,7 @@ def save_cli_credentials(access_key, session_key, session_token, section_name, r
     config.set(section_name, 'region', region)
 
     # Writing our configuration file to 'example.cfg'
-    with open(os.path.expanduser('~/.aws/credentials'), 'wb') as configfile:
+    with open(os.path.expanduser('~/.aws/credentials'), 'w') as configfile:
         config.write(configfile)
 
 def login_to_fedaccount(access_key, session_key, session_token, role_session_name):
