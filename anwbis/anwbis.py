@@ -1,7 +1,12 @@
 #!/usr/bin/env python
 import argparse
 import requests # "pip install requests"
-import sys, os, urllib, json, webbrowser
+import sys, os, json, webbrowser
+try:
+    from urllib.parse import unquote, quote_plus
+except ImportError:
+    from urllib import unquote, quote_plus
+
 import hashlib
 import re
 import os
@@ -394,7 +399,7 @@ def login_to_fedaccount(access_key, session_key, session_token, role_session_nam
     # been URL-encoded).
     request_parameters = "?Action=getSigninToken"
     request_parameters += "&Session="
-    request_parameters += urllib.quote_plus(json_temp_credentials)
+    request_parameters += quote_plus(json_temp_credentials)
     request_url = "https://signin.aws.amazon.com/federation"
     request_url += request_parameters
     r = requests.get(request_url)
@@ -409,7 +414,7 @@ def login_to_fedaccount(access_key, session_key, session_token, role_session_nam
     request_parameters = "?Action=login"
     request_parameters += "&Issuer=" + role_session_name
     request_parameters += "&Destination="
-    request_parameters += urllib.quote_plus("https://console.aws.amazon.com/")
+    request_parameters += quote_plus("https://console.aws.amazon.com/")
     request_parameters += "&SigninToken=" + sign_in_token
     request_url = "https://signin.aws.amazon.com/federation"
     request_url += request_parameters
@@ -672,12 +677,12 @@ class Anwbis:
 
         if not args.from_ec2_role:
             policy = policy.get_group_policy_response.get_group_policy_result.policy_document
-            policy = urllib.unquote(policy)
+            policy = unquote(policy)
             group_policy.append(config_line_policy("iam:grouppolicy", group_name, policy_name, policy))
 
         else:
             policy = policy.get_role_policy_response.get_role_policy_result.policy_document
-            policy = urllib.unquote(policy)
+            policy = unquote(policy)
             group_policy.append(config_line_policy("iam:grouppolicy", group_name, policy_name, policy))
 
         output_lines(group_policy)
