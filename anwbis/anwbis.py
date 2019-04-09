@@ -70,7 +70,7 @@ def verbose(msg):
         print (Fore.RESET + Back.RESET + Style.RESET_ALL)
 
 def colormsg(msg,mode):
-    print ""
+    print("")
     if mode == 'ok':
         print (Fore.GREEN + '[ OK ] ' + ''.join(map(str, (msg))))
         print (Fore.RESET + Back.RESET + Style.RESET_ALL)
@@ -96,7 +96,7 @@ def config_line_policy(header, name, detail, data):
 def output_lines(lines):
     lines.sort()
     for line in lines:
-        print line
+        print(line)
 
 def list_function(list_instances, access_key, session_key, session_token, regions):
 
@@ -105,7 +105,7 @@ def list_function(list_instances, access_key, session_key, session_token, region
                     aws_access_key_id=access_key,
                     aws_secret_access_key=session_key,
                     security_token=session_token)
-    except Exception, e:
+    except Exception as e:
         colormsg ("There was an error connecting to EC2", "error")
         verbose(e)
         exit(1)
@@ -120,7 +120,7 @@ def list_function(list_instances, access_key, session_key, session_token, region
                 layout="{!s:60} {!s:15} {!s:15} {!s:15} {!s:15}"
                 headers=["Name","Project","Bastion","IP Address","Instance-Id","Status"]
                 colormsg(region+":","normal")
-                print layout.format(*headers)
+                print(layout.format(*headers))
 
             for reservation in reservations:
                 for instance in reservation.instances:
@@ -131,9 +131,9 @@ def list_function(list_instances, access_key, session_key, session_token, region
                             ip = instance.ip_address
 
                         if list_instances == 'all' and args.bastion_tag not in instance.tags:
-                            print layout.format(instance.tags['Name'], instance.tags[args.project_tag] if args.project_tag in instance.tags else "N/A", 'N/A', ip, instance.id, instance.state)
+                            print(layout.format(instance.tags['Name'], instance.tags[args.project_tag] if args.project_tag in instance.tags else "N/A", 'N/A', ip, instance.id, instance.state))
                         elif list_instances == 'all' or list_instances == 'bastion' and args.bastion_tag in instance.tags:
-                            print layout.format(instance.tags['Name'], instance.tags[args.project_tag] if args.project_tag in instance.tags else "N/A", instance.tags[args.bastion_tag], ip, instance.id, instance.state)
+                            print(layout.format(instance.tags['Name'], instance.tags[args.project_tag] if args.project_tag in instance.tags else "N/A", instance.tags[args.bastion_tag], ip, instance.id, instance.state))
                             bastions.append(ip)
                         elif list_instances == 'teleport' and args.bastion_tag in instance.tags and instance.tags[args.bastion_tag].lower()=='true':
                             bastions.append(ip)
@@ -142,7 +142,7 @@ def list_function(list_instances, access_key, session_key, session_token, region
         else:
             colormsg("There are no instances for your project in the region "+region, "error")
             exit(1)
-    except Exception, e:
+    except Exception as e:
         colormsg ("There was an error while listing EC2 instances", "error")
         verbose(e)
         exit(1)
@@ -240,7 +240,7 @@ def get_sts_token(sts_connection, role_arn, mfa_serial_number, role_session_name
                     duration_seconds=token_expiration,
                 )
 
-    except Exception, e:
+    except Exception as e:
         colormsg ("There was an error assuming role", "error")
         verbose(e)
         exit(1)
@@ -263,15 +263,15 @@ def get_sts_token(sts_connection, role_arn, mfa_serial_number, role_session_name
     save_cli_credentials(access_key, session_key, session_token, '-'.join([project_name, environment_name, role_name]), region)
 
     if args.stdout:
-        print ""
-        print "If you want to use your credentials from the environment with an external Tool (for instance, Terraform), you can use the following instructions:"
-        print "WARNING: If you use it in the same shell as anwbis exported variables takes precedence over the .aws/credentials, so use it carefully"
-        print ""
-        print "export AWS_ACCESS_KEY_ID='%s'" % access_key
-        print "export AWS_SECRET_ACCESS_KEY='%s'" % session_key
-        print "export AWS_SESSION_TOKEN='%s'" % session_token
-        print "export AWS_DEFAULT_REGION='%s'" % region
-        print ""
+        print("")
+        print("If you want to use your credentials from the environment with an external Tool (for instance, Terraform), you can use the following instructions:")
+        print("WARNING: If you use it in the same shell as anwbis exported variables takes precedence over the .aws/credentials, so use it carefully")
+        print("")
+        print("export AWS_ACCESS_KEY_ID='%s'" % access_key)
+        print("export AWS_SECRET_ACCESS_KEY='%s'" % session_key)
+        print("export AWS_SESSION_TOKEN='%s'" % session_token)
+        print("export AWS_DEFAULT_REGION='%s'" % region)
+        print("")
 
     return { 'access_key':access_key, 'session_key': session_key, 'session_token': session_token, 'role_session_name': role_session_name }
 
@@ -308,7 +308,7 @@ def get_session_token(sts_connection, role_arn, mfa_serial_number, role_session_
              colormsg ("When using get_session you must use MFA", "error")
              exit(1)
 
-    except Exception, e:
+    except Exception as e:
         colormsg ("There was an error assuming role", "error")
         verbose(e)
         exit(1)
@@ -338,16 +338,16 @@ def get_session_token(sts_connection, role_arn, mfa_serial_number, role_session_
     save_cli_credentials(access_key, session_key, session_token, '-'.join(['corp','session',credential_profile]), region)
 
     if args.stdout:
-        print ""
-        print "If you want to use your credentials from the environment with an external Tool (for instance, Terraform), you can use the following instructions:"
-        print "WARNING: If you use it in the same shell as anwbis exported variables takes precedence over the .aws/credentials, so use it carefully"
-        print ""
-        print "export AWS_ACCESS_KEY_ID='%s'" % access_key
-        print "export AWS_SECRET_ACCESS_KEY='%s'" % session_key
-        print "export AWS_SESSION_TOKEN='%s'" % session_token
-        print "export AWS_DEFAULT_REGION='%s'" % region
-        print "Expiration='%s'" % expiration
-        print ""
+        print("")
+        print("If you want to use your credentials from the environment with an external Tool (for instance, Terraform), you can use the following instructions:")
+        print("WARNING: If you use it in the same shell as anwbis exported variables takes precedence over the .aws/credentials, so use it carefully")
+        print("")
+        print("export AWS_ACCESS_KEY_ID='%s'" % access_key)
+        print("export AWS_SECRET_ACCESS_KEY='%s'" % session_key)
+        print("export AWS_SESSION_TOKEN='%s'" % session_token)
+        print("export AWS_DEFAULT_REGION='%s'" % region)
+        print("Expiration='%s'" % expiration)
+        print("")
 
     return { 'access_key':access_key, 'session_key': session_key, 'session_token': session_token, 'role_session_name': role_session_name }
 
@@ -363,7 +363,7 @@ def save_cli_credentials(access_key, session_key, session_token, section_name, r
         os.makedirs(basedir)
     if not os.path.isfile(home+'/.aws/credentials'):
         verbose("There is no ~/.aws/credentials (probably using an EC2 instance profile. Creating credentials file...")
-        open(home+'/.aws/credentials', 'a').close() 
+        open(home+'/.aws/credentials', 'a').close()
     config.read(os.path.expanduser('~/.aws/credentials'))
 
     if not config.has_section(section_name):
@@ -416,29 +416,29 @@ def login_to_fedaccount(access_key, session_key, session_token, role_session_nam
 
     # Easter Egg: Say Hello
     if args.goodbye:
-        print ""
-        print "          .. ..              ..."
-        print "        .' ;' ;             ;''''."
-        print "        ;| ; |;            ;;    ;"
-        print "        ;| ; |;            ;;.   ;"
-        print "        ;  ~~~~',,,,,,,    '. '  ;"
-        print "        ;    -A       ;      ';  ;"
-        print "        ;       .....'        ;   ;"
-        print "        ;      _;             ;   ;"
-        print "        ;   __(o)__.          ;   ;"
-        print "       .;  '\--\\--\        .'    ;"
-        print "     .'\ \_.._._\\......,.,.;     ;"
-        print "  .''   |       ;   ';      '    .'"
-        print " ;      |      .'    ;..,,.,,,,.'"
-        print " ;      |    .'  ...'"
-        print " '.     \  .'   ,'  \\"
-        print "   '.    ;'   .;     \\"
-        print "     '.      .'      '-'"
-        print "       '..  .'"
-        print "          '''"
-        print ""
-        print "  Thanks for using AnWbiS. Goodbye!"
-        print ""
+        print("")
+        print("          .. ..              ...")
+        print("        .' ;' ;             ;''''.")
+        print("        ;| ; |;            ;;    ;")
+        print("        ;| ; |;            ;;.   ;")
+        print("        ;  ~~~~',,,,,,,    '. '  ;")
+        print("        ;    -A       ;      ';  ;")
+        print("        ;       .....'        ;   ;")
+        print("        ;      _;             ;   ;")
+        print("        ;   __(o)__.          ;   ;")
+        print("       .;  '\--\\--\        .'    ;")
+        print("     .'\ \_.._._\\......,.,.;     ;")
+        print("  .''   |       ;   ';      '    .'")
+        print(" ;      |      .'    ;..,,.,,,,.'")
+        print(" ;      |    .'  ...'")
+        print(" '.     \  .'   ,'  \\")
+        print("   '.    ;'   .;     \\")
+        print("     '.      .'      '-'")
+        print("       '..  .'")
+        print("          '''")
+        print("")
+        print("  Thanks for using AnWbiS. Goodbye!")
+        print("")
 
     # Use the browser to sign in to the console using the
     # generated URL.
@@ -448,28 +448,28 @@ def login_to_fedaccount(access_key, session_key, session_token, role_session_nam
     if browser == 'firefox':
         try:
             webbrowser.get(firefox_path).open(request_url,new=0)
-        except Exception, e:
+        except Exception as e:
             colormsg ("There was an error while open your browser", "error")
             verbose(e)
             exit(1)
     elif browser == 'chrome':
         try:
             webbrowser.get(chrome_path).open(request_url,new=0)
-        except Exception, e:
+        except Exception as e:
             colormsg ("There was an error while open your browser", "error")
             verbose(e)
             exit(1)
     elif browser == 'chromium':
         try:
             webbrowser.get(chromium_path).open(request_url,new=0)
-        except Exception, e:
+        except Exception as e:
             colormsg ("There was an error while open your browser", "error")
             verbose(e)
             exit(1)
     elif browser == 'default':
         try:
             webbrowser.open(request_url)
-        except Exception, e:
+        except Exception as e:
             colormsg ("There was an error while open your browser", "error")
             verbose(e)
             exit(1)
@@ -498,21 +498,21 @@ class Anwbis:
 
         # Welcome
         if args.verbose:
-            print ""
-            print "             __          ___     _  _____ "
-            print "     /\      \ \        / / |   (_)/ ____|"
-            print "    /  \   _ _\ \  /\  / /| |__  _| (___  "
-            print "   / /\ \ | '_ \ \/  \/ / | '_ \| |\___ \ "
-            print "  / ____ \| | | \  /\  /  | |_) | |____) |"
-            print " /_/    \_\_| |_|\/  \/   |_.__/|_|_____/ "
-            print ""
-            print "       Amazon Account Access "+ version
-            print ""
+            print("")
+            print("             __          ___     _  _____ ")
+            print("     /\      \ \        / / |   (_)/ ____|")
+            print("    /  \   _ _\ \  /\  / /| |__  _| (___  ")
+            print("   / /\ \ | '_ \ \/  \/ / | '_ \| |\___ \ ")
+            print("  / ____ \| | | \  /\  /  | |_) | |____) |")
+            print(" /_/    \_\_| |_|\/  \/   |_.__/|_|_____/ ")
+            print("")
+            print("       Amazon Account Access "+ version)
+            print("")
 
         else:
-            print ""
-            print "AnWbiS Amazon Account Access "+ version
-            print ""
+            print("")
+            print("AnWbiS Amazon Account Access "+ version)
+            print("")
 
         # Set values from parser
 
@@ -604,7 +604,7 @@ class Anwbis:
                 role_session_name=profilename
             else:
                 role_session_name=iam_connection.get_user().get_user_response.get_user_result.user.user_name
-        except Exception, e:
+        except Exception as e:
             colormsg ("There was an error retrieving your session_name. Check your credentials", "error")
             verbose(e)
             exit(1)
@@ -617,7 +617,7 @@ class Anwbis:
                 role_name_from_user=profilename
             else:
                 account_id=iam_connection.get_user().get_user_response.get_user_result.user.arn.split(':')[4]
-        except Exception, e:
+        except Exception as e:
             colormsg ("There was an error retrieving your account id. Check your credentials", "error")
             verbose(e)
             exit(1)
@@ -665,7 +665,7 @@ class Anwbis:
             else:
                 #policy = iam_connection.get_instance_profile(profilename)
                 policy = iam_connection.get_role_policy (profilename,policy_name)
-        except Exception, e:
+        except Exception as e:
             colormsg ("There was an error retrieving your group policy. Check your credentials, group_name and policy_name", "error")
             verbose(e)
             exit(1)
@@ -771,7 +771,7 @@ class Anwbis:
                     else:
                         sts_token = get_sts_token(sts_connection, role_arn, mfa_serial_number, role_session_name, project, env, role, token_expiration)
             else:
-                #print ".anwbis configuration file doesnt exists"
+                #print(".anwbis configuration file doesnt exists")
                 verbose("role is " +  role)
                 sts_token = get_sts_token(sts_connection, role_arn, mfa_serial_number, role_session_name, project, env, role, token_expiration)
         return sts_token
@@ -806,7 +806,7 @@ class Anwbis:
                 colormsg("Sorry, there are no bastions to connect in project "+project+" for the environment "+env, "error")
             elif len(bastions) == 1:
                 for i in bastions:
-                    print i
+                    print(i)
             else:
                 colormsg("There are more than one bastion in project "+project+" for the environment "+env, "normal")
                 list_function('bastion')
