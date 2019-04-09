@@ -87,7 +87,7 @@ def colormsg(msg,mode):
         print (Fore.RESET + Back.RESET + Style.RESET_ALL)
 
 def sha256(m):
-    return hashlib.sha256(m).hexdigest()
+    return hashlib.sha256(m.enconde('utf-8')).hexdigest()
 
 def config_line(header, name, detail, data):
     return header + ", " + name + ", " + detail + ", " + data
