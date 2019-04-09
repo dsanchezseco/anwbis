@@ -358,7 +358,7 @@ def get_session_token(sts_connection, role_arn, mfa_serial_number, role_session_
 
 def save_cli_credentials(access_key, session_key, session_token, section_name, region):
     try:
-        import configparser
+        import configparser ConfigParser
     except ImportError:
         import ConfigParser
     import os
